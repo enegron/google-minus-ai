@@ -73,9 +73,20 @@
       font-size: 0.8rem;
       color: #80868b;
     }
+
+    .featured-image {
+      max-width: 560px;
+      max-height: 320px;
+      width: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <img class="featured-image" id="featuredImage" alt="Featured" />
+
   <h1>Search Without AI</h1>
 
   <form class="search-form" id="searchForm">
@@ -93,6 +104,20 @@
   <span class="hint">Appends <code>-ai</code> to your query automatically</span>
 
   <script>
+    fetch('images/manifest.json')
+      .then(function (response) { return response.json(); })
+      .then(function (manifest) {
+        const imageFilenames = manifest.images;
+        if (!imageFilenames || imageFilenames.length === 0) return;
+
+        const randomIndex = Math.floor(Math.random() * imageFilenames.length);
+        const selectedFilename = imageFilenames[randomIndex];
+
+        const imageElement = document.getElementById('featuredImage');
+        imageElement.src = 'images/' + selectedFilename;
+        imageElement.style.display = 'block';
+      });
+
     document.getElementById('searchForm').addEventListener('submit', function (submitEvent) {
       submitEvent.preventDefault();
 
